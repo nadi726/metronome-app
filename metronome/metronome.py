@@ -11,7 +11,7 @@ from kivy.properties import ObjectProperty, NumericProperty
 from kivy.core.window import Window
 from kivymd.uix.button import MDIconButton
 
-from helpers import PlaySound, Spotify
+from metronome.helpers import PlaySound, Spotify
 """<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>"""
 
 #Builder.load_file("metronome.kv")
