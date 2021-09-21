@@ -7,7 +7,7 @@ from kivy.clock import Clock
 
 from kivy.core.audio import SoundLoader
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, NumericProperty
+from kivy.properties import ObjectProperty, NumericProperty, DictProperty
 from kivy.core.window import Window
 from kivymd.uix.button import MDIconButton
 
@@ -61,13 +61,29 @@ class MainLayout(FloatLayout):
     bpm = NumericProperty(120)
     max_bpm = 240
     min_bpm = 20
-    def search(self):
-        song_info = self.sp.get_song_info(*self.song_name.text.split("-"))
-        print("Song info:\n" + str(song_info))
+    metadata = dict.fromkeys(["name", "artists", "tempo",
+                     "time_signature", "duration", "mode", "key"], '')
     
+    def on_search(self):
+        """ Is binded to the search button's on_press method
+        Gets metadata based on the text input and returns results accordingly.
+        """
+        search_text = self.song_name.text
+        # Basic validation and reformatting
+        if "-" not in search_text:
+            return
+        song, artist = search_text.split("-")
+        song, artist = song.strip(), artist.strip()
+
+        metadata = self.sp.get_song_metadata(song, artist)
+        if metadata is None:
+            return
+        
+        self.bpm = round(metadata["tempo"])
+        self.metadata = metadata
+        print("Song metadata:\n" + str(self.metadata))
+         
  
-
-
 class MetronomeApp(MDApp):
 
     def build(self):

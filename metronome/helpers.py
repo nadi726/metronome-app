@@ -16,7 +16,7 @@ class Spotify(spotipy.Spotify):
             client_secret=client_secret
         ))
     
-    def get_song_info(self, song, artist):
+    def get_song_metadata(self, song, artist):
         # Get song id
         # TODO: make a filtering algorithm for song and artist name
         results = self.search(q=f'track:"{song}" artist:"{artist}"', type='track', limit=5)["tracks"]["items"]
@@ -87,4 +87,4 @@ if __name__ == "__main__":
         query = input("song name - artist name: ")
         song, artist = query.split("-")
         song, artist = song.strip(), artist.strip()
-        print(sp.get_song_info(song, artist))
+        print(sp.get_song_metadata(song, artist))
