@@ -86,8 +86,9 @@ class PlayButton(MDIconButton):
 
 
 class MainLayout(FloatLayout):
-    """Main layout, has attributes and methods that are used by child widgets.
-    
+    """
+    Main layout, has attributes and methods that are used by child widgets.
+
     Attributes
     ----------
     sp: Spotify
@@ -101,17 +102,20 @@ class MainLayout(FloatLayout):
     min_bpm: int
         Minimum bpm for slider.
     metadata: DictProperty
-        The current song's metadata
+        The current song's metadata.
     """
-    
+
     sp = Spotify()
     song_input = ObjectProperty(None)
     bpm = NumericProperty(120)
     max_bpm = 240
     min_bpm = 20
-    metadata = DictProperty(dict.fromkeys(
-        ["name", "artists", "tempo", "time_signature", "duration", "mode", "key"], ""
-    ))
+    metadata = DictProperty(
+        dict.fromkeys(
+            ["name", "artists", "tempo", "time_signature", "duration", "mode", "key"],
+            "",
+        )
+    )
 
     def on_search(self):
         """Attempt to get song metadata from text and act accordingly.

@@ -47,7 +47,7 @@ class Spotify(spotipy.Spotify):
         song_id = results[0]["id"]
         song = self.track(song_id)
 
-        # Get Relevant metadata
+        # Get relevant metadata
         artists = [artist["name"] for artist in song["artists"]]
         song_metadata = {"name": song["name"], "artists": artists}
 
@@ -68,7 +68,7 @@ class Spotify(spotipy.Spotify):
 
     def _format_metadata(self, metadata):
         """Format metadata to a human-readable format."""
-        # Convert duration to minutes:seconds
+        # Convert duration from seconds to mm:ss
         m, s = divmod(int(metadata["duration"]), 60)
         metadata["duration"] = f"{m:02d}:{s:02d}"
 
