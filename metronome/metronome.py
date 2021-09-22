@@ -1,4 +1,5 @@
 from kivy.config import Config
+
 Config.set("kivy", "kivy_clock", "free_all")
 
 from kivymd.app import MDApp
@@ -19,10 +20,10 @@ Window.size = (450, 600)
 
 
 class PlayButton(MDIconButton):
-    """ A play button for the metronome,
-    also plays the beeps according to the bpm
-    
-    ...
+    """
+    A play button for the metronome.
+
+    Also plays the beeps according to the bpm.
 
     Attributes
     ----------
@@ -42,6 +43,7 @@ class PlayButton(MDIconButton):
     on_bpm_change
         Defines behavior for bpm change.
     """
+
     bpm = NumericProperty(None)
 
     def __init__(self, **kwargs):
@@ -61,20 +63,20 @@ class PlayButton(MDIconButton):
             self._stop()
 
     def on_bpm_change(self, instance, value):
-        """Defines behavior for bpm change."""
+        """Define behavior for bpm change."""
         if self.is_playing:
             # Reset and play
             self.clock_event.cancel()
             self._play()
 
     def _play(self):
-        """Handles everything needed for changing the button state to play"""
+        """Handle everything needed for changing the button state to play."""
         self.icon = "resources/pause-button.png"
         self.clock_event = Clock.schedule_interval_free(self._play_sound, 60 / self.bpm)
         self.is_playing = True
 
     def _stop(self):
-        """Handles everything needed for changing the button state to pause"""
+        """Handle everything needed for changing the button state to pause."""
         self.icon = "resources/play-button.png"
         self.clock_event.cancel()
         self.is_playing = False
@@ -84,24 +86,44 @@ class PlayButton(MDIconButton):
 
 
 class MainLayout(FloatLayout):
+    """Main layout, has attributes and methods that are used by child widgets.
+    
+    Attributes
+    ----------
+    sp: Spotify
+        A spotify API client with song search method.
+    song_input: ObjectProperty
+        The text from the 'song - artist' text field.
+    bpm: NumericProperty
+        Beats per minute to be played in the metronome.
+    max_bpm: int
+        Maximum bpm for slider.
+    min_bpm: int
+        Minimum bpm for slider.
+    metadata: DictProperty
+        The current song's metadata
+    """
+    
     sp = Spotify()
-    song_name = ObjectProperty(None)
+    song_input = ObjectProperty(None)
     bpm = NumericProperty(120)
-
     max_bpm = 240
     min_bpm = 20
-    metadata = dict.fromkeys(
+    metadata = DictProperty(dict.fromkeys(
         ["name", "artists", "tempo", "time_signature", "duration", "mode", "key"], ""
-    )
+    ))
 
     def on_search(self):
-        """Is binded to the search button's on_press method
+        """Attempt to get song metadata from text and act accordingly.
+
+        Is binded to the search button's on_press method.
         Gets metadata based on the text input and returns results accordingly.
         """
-        search_text = self.song_name.text
-        # Basic validation and reformatting
+        search_text = self.song_input.text
+        # Invalid input
         if "-" not in search_text:
             return
+        # Basic reformatting
         song, artist = search_text.split("-")
         song, artist = song.strip(), artist.strip()
 
@@ -112,7 +134,7 @@ class MainLayout(FloatLayout):
         self.bpm = round(metadata["tempo"])
         self.metadata = metadata
         print("Song metadata:\n" + str(self.metadata))
-    
+
 
 class MetronomeApp(MDApp):
     def build(self):
