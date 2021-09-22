@@ -6,6 +6,7 @@ from kivy.utils import platform
 
 class Spotify(spotipy.Spotify):
     def __init__(self):
+        # Get spotify client credentials
         config = configparser.ConfigParser()
         config.read("metronome/config.cfg")
         client_id = config.get("SPOTIFY", "CLIENT_ID")
@@ -18,7 +19,6 @@ class Spotify(spotipy.Spotify):
         )
 
     def get_song_metadata(self, song, artist):
-        # Get song id
         # TODO: make a filtering algorithm for song and artist name
         results = self.search(
             q=f'track:"{song}" artist:"{artist}"', type="track", limit=5
@@ -38,6 +38,7 @@ class Spotify(spotipy.Spotify):
         # Merge song and artists names with the rest of the metadata
         song_metadata = {**song_metadata, **audio_analysis}
         self._format_metadata(song_metadata)
+        
         return song_metadata
 
     def _get_relevant_audio_analysis(self, song_id):

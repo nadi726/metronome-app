@@ -1,21 +1,19 @@
 #:kivy 2.0.0
-#:import hex kivy.utils.get_color_from_hex
-#:import MDIconButton kivymd.uix.button
-#:import MDFillRoundFlatButton kivymd.uix.button
-#:import MDTextField kivymd.uix.textfield
 
 
 <MainLayout>:
     song_name: song_name
 
+    # Search song
     BoxLayout:
         orientation: "horizontal"
         spacing: 25
         size_hint: 0.7, 0.2
         pos_hint: {"center_x": 0.5, "top": 1}
+        
         MDTextField:
             id: song_name
-            hint_text: "Song name - artist name"
+            hint_text: "Song - Artist"
             mode: "rectangle"
         MDFillRoundFlatButton:
             text: "Search"
@@ -27,12 +25,13 @@
         bpm: root.bpm
         user_font_size: "125sp"
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
+    
+    # Display bpm
     MDBoxLayout:
         orientation: "horizontal"
         size_hint: 0.3, 0.15
         pos_hint: {"center_x": 0.5, "center_y": 0.3}
-        padding: 0, 0, 0, 0
+        
         TextInput:
             text: str(root.bpm)
             input_filter: "int"
@@ -51,6 +50,8 @@
         size_hint: 0.8, 0.1
         pos_hint: {"center_x": 0.5, "center_y": 0.2}
         spacing: 10
+        
+        # Increase bpm by 1
         MDTextButton:
             text: "-"
             font_size: 60
@@ -66,6 +67,8 @@
             hint: False
             pos_hint: {"center_y": 0.5}
             on_value: root.bpm = self.value
+        
+        # Decrease bpm by 1
         MDTextButton:
             text: "+"
             font_size: 60
