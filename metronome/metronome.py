@@ -19,6 +19,29 @@ Window.size = (450, 600)
 
 
 class PlayButton(MDIconButton):
+    """ A play button for the metronome,
+    also plays the beeps according to the bpm
+    
+    ...
+
+    Attributes
+    ----------
+    icon: str
+        a path to the icon image
+    sound: PlaySound
+        an interface for playing the beep of the metronome
+    clock_event: kivy.event
+        the clock event for timing the beeps according to the bpm (default None)
+    is_playing: Bool
+        The current status of the button (play/pause)
+
+    Methods
+    -------
+    on_press
+        Play the button if it's paused, and pause if it's playing.
+    on_bpm_change
+        Defines behavior for bpm change.
+    """
     bpm = NumericProperty(None)
 
     def __init__(self, **kwargs):
@@ -31,28 +54,32 @@ class PlayButton(MDIconButton):
         self.bind(bpm=self.on_bpm_change)
 
     def on_press(self):
+        """Play the button if it's paused, and pause if it's playing."""
         if not self.is_playing:
-            self.play()
+            self._play()
         elif self.is_playing:
-            self.stop()
+            self._stop()
 
-    def play(self):
+    def on_bpm_change(self, instance, value):
+        """Defines behavior for bpm change."""
+        if self.is_playing:
+            # Reset and play
+            self.clock_event.cancel()
+            self._play()
+
+    def _play(self):
+        """Handles everything needed for changing the button state to play"""
         self.icon = "resources/pause-button.png"
-        self.clock_event = Clock.schedule_interval_free(self.play_sound, 60 / self.bpm)
+        self.clock_event = Clock.schedule_interval_free(self._play_sound, 60 / self.bpm)
         self.is_playing = True
 
-    def stop(self):
+    def _stop(self):
+        """Handles everything needed for changing the button state to pause"""
         self.icon = "resources/play-button.png"
         self.clock_event.cancel()
         self.is_playing = False
 
-    def on_bpm_change(self, instance, value):
-        if self.is_playing:
-            # Reset and play
-            self.clock_event.cancel()
-            self.play()
-
-    def play_sound(self, dt):
+    def _play_sound(self, dt):
         self.sound.play()
 
 

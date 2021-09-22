@@ -5,7 +5,13 @@ from kivy.utils import platform
 
 
 class Spotify(spotipy.Spotify):
+    """ 
+    A spotipy API client based on the spotipy client
+
+    """
+
     def __init__(self):
+
         # Get spotify client credentials
         config = configparser.ConfigParser()
         config.read("metronome/config.cfg")
@@ -19,6 +25,21 @@ class Spotify(spotipy.Spotify):
         )
 
     def get_song_metadata(self, song, artist):
+        """
+        Gets all relevant song metadata from the spotify API
+
+        Parameters
+        ----------
+        song : str
+            The name of the song
+        artist : str
+            The name of the artist
+        
+        Returns
+        -------
+        Optional(dict)
+            The song's metadata, None on failure to fetch metadata.
+        """
         # TODO: make a filtering algorithm for song and artist name
         results = self.search(
             q=f'track:"{song}" artist:"{artist}"', type="track", limit=5
@@ -42,13 +63,14 @@ class Spotify(spotipy.Spotify):
         return song_metadata
 
     def _get_relevant_audio_analysis(self, song_id):
-        """extract relevant info from audio analysis and format it"""
+        """extract relevant info from audio analysis"""
         full_analysis = self.audio_analysis(song_id)["track"]
         fields = ("tempo", "time_signature", "duration", "mode", "key")
         analysis = {i: full_analysis[i] for i in fields}
         return analysis
 
     def _format_metadata(self, metadata):
+        """ Formats metadata to a human-readable format."""
         # Convert duration to minutes:seconds
         m, s = divmod(int(metadata["duration"]), 60)
         metadata["duration"] = f"{m:02d}:{s:02d}"
@@ -64,6 +86,22 @@ class Spotify(spotipy.Spotify):
 
 
 class PlaySound:
+    """
+    An interface to playing sound.
+
+    Serves as a wrapper to both pygame.mixer and the audio interface in pynjius,
+    and uses the appropiate one according to the OS.
+    
+    ...
+    Attributes
+    ----------
+    soundfile: str
+        a path to the sound file
+    Attributes
+    ----------
+    sound: pygame.mixer.Sound / jnius.autoclass
+        the sound interface being wrapped by this class
+    """
     def __init__(self, soundfile):
         # Use pygame's mixer on platforms other than android
         if platform != "android":
