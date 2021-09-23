@@ -3,21 +3,33 @@
 
 <MainLayout>:
     song_input: song_input
-
+    artist_input: artist_input
+    
     # Search song
     BoxLayout:
         orientation: "horizontal"
         spacing: 25
-        size_hint: 0.7, 0.2
-        pos_hint: {"center_x": 0.5, "top": 1}
+        size_hint: 0.9, 0.2
+        pos_hint: {"center_x": 0.52, "top": 1}
         
-        MDTextField:
-            id: song_input
-            hint_text: "Song - Artist"
-            mode: "rectangle"
+        BoxLayout:
+            spacing: 35
+            
+            MDTextField:
+                id: song_input
+                hint_text: "Song"
+                mode: "rectangle"
+                write_tab: False
+                on_text_validate: root.on_search()
+            MDTextField:
+                id: artist_input
+                hint_text: "Artist"
+                mode: "rectangle"
+                on_text_validate: root.on_search()
+        
         MDFillRoundFlatButton:
             text: "Search"
-            size_hint: 0.7, 0.3
+            size_hint_x: 0.4
             font_size: "18sp"
             on_press: root.on_search()
 

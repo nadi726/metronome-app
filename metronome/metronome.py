@@ -107,6 +107,7 @@ class MainLayout(FloatLayout):
 
     sp = Spotify()
     song_input = ObjectProperty(None)
+    artist_input = ObjectProperty(None)
     bpm = NumericProperty(120)
     max_bpm = 240
     min_bpm = 20
@@ -123,12 +124,11 @@ class MainLayout(FloatLayout):
         Is binded to the search button's on_press method.
         Gets metadata based on the text input and returns results accordingly.
         """
-        search_text = self.song_input.text
-        # Invalid input
-        if "-" not in search_text:
+        song, artist = self.song_input.text, self.artist_input.text
+        
+        # Only allow non-empty searches for now
+        if not song or not artist:
             return
-        # Basic reformatting
-        song, artist = search_text.split("-")
         song, artist = song.strip(), artist.strip()
 
         metadata = self.sp.get_song_metadata(song, artist)

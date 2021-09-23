@@ -62,7 +62,7 @@ class Spotify(spotipy.Spotify):
 
         return song_metadata
 
-    def _change_to_valid_names(self, song, artists):
+    def _change_to_valid_names(self, song, artist):
         """Change provided song and artist names to the names in the spotify API.
 
         Some naming conventions of names in the spotify API are a bit
@@ -85,13 +85,13 @@ class Spotify(spotipy.Spotify):
         -------
         song : str
             The song name provided, modified as needed(if at all).
-        artists : str
+        artist : str
             The artists names provided, modified as needed(if at all).
         """
-        song, artists = song.lower().strip(), artists.lower().strip()
+        song, artist = song.lower().strip(), artist.lower().strip()
         if song == "i'm yours" and artists == "jason mraz":
-            return "im yours", artists
-        elif artists == "the eagles":
+            return "im yours", artist
+        elif artist == "the eagles":
             return song, "eagles"
 
         # No match
