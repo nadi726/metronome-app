@@ -21,7 +21,7 @@ class Spotify(spotipy.Spotify):
             )
         )
 
-    def get_song_metadata(self, song, artist):
+    def get_song_metadata(self, song, artists):
         """
         Get all relevant song metadata from the spotify API.
 
@@ -29,28 +29,31 @@ class Spotify(spotipy.Spotify):
         ----------
         song : str
             The name of the song
-        artist : str
-            The name of the artist
+        artists : str
+            The names of the artists
 
         Returns
         -------
         Optional(dict)
             The song's metadata, None on failure to fetch metadata.
         """
-        # TODO: make a filtering algorithm for song and artist name
+        song, artists = self._change_to_valid_names(song, artists)
         results = self.search(
-            q=f'track:"{song}" artist:"{artist}"', type="track", limit=5
+            q=f'track:"{song}" artist:"{artists}"', type="track", limit=10
         )["tracks"]["items"]
         if not results:
             return None
+
+        # For debugging purposes(maybe replace with logging)
+        print("Search results:")
+        for song in results:
+            print(f"song: {song['name']}. artists: {self._get_artists(song)}")
 
         song_id = results[0]["id"]
         song = self.track(song_id)
 
         # Get relevant metadata
-        artists = [artist["name"] for artist in song["artists"]]
-        song_metadata = {"name": song["name"], "artists": artists}
-
+        song_metadata = {"name": song["name"], "artists": self._get_artists(song)}
         audio_analysis = self._get_relevant_audio_analysis(song_id)
 
         # Merge song and artists names with the rest of the metadata
@@ -58,6 +61,46 @@ class Spotify(spotipy.Spotify):
         self._format_metadata(song_metadata)
 
         return song_metadata
+
+    def _change_to_valid_names(self, song, artists):
+        """Change provided song and artist names to the names in the spotify API.
+
+        Some naming conventions of names in the spotify API are a bit
+        different from the names we usually call them.
+        For example, 'The Eagles' are simply referred to by 'eagles',
+        and searching for 'The eagles' provides no results.
+        This function is responsible for finding those instances and replacing them
+        with the names that the spotify API knows.
+        Currently only a few songs have been found,
+        so there's no need to create an external file.
+
+        Parameters
+        ----------
+        song : str
+            The name of the song, as provided by get_song_matadata.
+        artists : str
+            The names of the artists, as provided by get_song_matadata.
+
+        Returns
+        -------
+        song : str
+            The song name provided, modified as needed(if at all).
+        artists : str
+            The artists names provided, modified as needed(if at all).
+        """
+        song, artists = song.lower().strip(), artists.lower().strip()
+        if song == "i'm yours" and artists == "jason mraz":
+            return "im yours", artists
+        elif artists == "the eagles":
+            return song, "eagles"
+
+        # No match
+        else:
+            return song, artist
+
+    def _get_artists(self, song):
+        """Get a list of artists names from dict."""
+        return [artist["name"] for artist in song["artists"]]
 
     def _get_relevant_audio_analysis(self, song_id):
         """Extract relevant info from audio analysis."""
@@ -89,10 +132,11 @@ class PlaySound:
     Serves as a wrapper to both pygame.mixer and the audio interface in pynjius,
     and uses the appropiate one according to the OS.
 
-    Attributes
+    Parameters
     ----------
     soundfile: str
         a path to the sound file
+
     Attributes
     ----------
     sound: pygame.mixer.Sound / jnius.autoclass
