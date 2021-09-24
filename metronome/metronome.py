@@ -11,8 +11,9 @@ from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, NumericProperty, DictProperty
 from kivymd.uix.button import MDIconButton
+from kivymd.uix.label import MDLabel
 
-from metronome.helpers import PlaySound, Spotify
+from metronome.helpers import PlaySound, Spotify, threaded
 
 
 # For having a rough idea of what it would look like on android
@@ -118,6 +119,7 @@ class MainLayout(FloatLayout):
         )
     )
 
+    @threaded
     def on_search(self):
         """Attempt to get song metadata from text and act accordingly.
 
@@ -125,7 +127,7 @@ class MainLayout(FloatLayout):
         Gets metadata based on the text input and returns results accordingly.
         """
         song, artist = self.song_input.text, self.artist_input.text
-        
+
         # Only allow non-empty searches for now
         if not song or not artist:
             return

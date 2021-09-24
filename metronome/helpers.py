@@ -2,6 +2,8 @@ import spotipy
 import configparser
 from spotipy.oauth2 import SpotifyClientCredentials
 from kivy.utils import platform
+from threading import Thread
+from functools import wraps
 
 
 class Spotify(spotipy.Spotify):
@@ -164,6 +166,16 @@ class PlaySound:
 
     def play(self):
         self.sound.play()
+
+
+def threaded(func):
+    """A decorator for threading MetronomeApp.on_search"""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        Thread(target=func, args=args, kwargs=kwargs, daemon=True).start()
+
+    return wrapper
 
 
 if __name__ == "__main__":
