@@ -4,6 +4,7 @@
 <MainLayout>:
     song_input: song_input
     artist_input: artist_input
+    search_info: search_info
 
     # Search song
     BoxLayout:
@@ -33,6 +34,15 @@
             size_hint_x: 0.4
             font_size: "18sp"
             on_press: root.on_search()
+    
+    # Search info
+    MDLabel:
+        size_hint: 0.8, 0.2
+        pos_hint: {"center_x": 0.5, "center_y": 0.75}
+        id: search_info
+        font_size: 15
+        text: "Try searching for a song"
+        theme_text_color: "Hint"
 
     PlayButton:
         bpm: root.bpm

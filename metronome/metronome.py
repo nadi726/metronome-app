@@ -19,6 +19,10 @@ from metronome.helpers import PlaySound, Spotify, threaded
 # For having a rough idea of what it would look like on android
 Window.size = (450, 600)
 
+class SearchInfo(MDLabel):
+    def on_search():
+        pass
+
 
 class PlayButton(MDIconButton):
     """
@@ -109,6 +113,8 @@ class MainLayout(FloatLayout):
     sp = Spotify()
     song_input = ObjectProperty(None)
     artist_input = ObjectProperty(None)
+    search_info = ObjectProperty(None)
+
     bpm = NumericProperty(120)
     max_bpm = 240
     min_bpm = 20
@@ -130,16 +136,36 @@ class MainLayout(FloatLayout):
 
         # Only allow non-empty searches for now
         if not song or not artist:
+            self._display_search_info(1)
             return
         song, artist = song.strip(), artist.strip()
 
         metadata = self.sp.get_song_metadata(song, artist)
         if metadata is None:
+            self._display_search_info(2)
             return
 
+        self._display_search_info(0)
         self.bpm = round(metadata["tempo"])
         self.metadata = metadata
         print("Song metadata:\n" + str(self.metadata))
+    
+    def _display_search_info(self, err_code):
+        # Succesful search
+        if err_code == 0:
+            self.search_info.text = "Success!"
+            self.search_info.theme_text_color = "Custom"
+            self.search_info.text_color = (0, 0.8, 0.4) # Green
+            return
+        
+        # Errors
+        self.search_info.theme_text_color = "Error"
+        # Empty song name and/or artist name in search input
+        if err_code == 1:
+            self.search_info.text = "Song and artist names cannot be empty."
+        # No search results
+        elif err_code == 2:
+            self.search_info.text = "Couldn't find any results.\nMaybe try modifiyng your search?"
 
 
 class MetronomeApp(MDApp):
