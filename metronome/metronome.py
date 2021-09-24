@@ -13,15 +13,12 @@ from kivy.properties import ObjectProperty, NumericProperty, DictProperty
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.label import MDLabel
 
+import functools
 from metronome.helpers import PlaySound, Spotify, threaded
 
 
 # For having a rough idea of what it would look like on android
 Window.size = (450, 600)
-
-class SearchInfo(MDLabel):
-    def on_search():
-        pass
 
 
 class PlayButton(MDIconButton):
@@ -125,7 +122,12 @@ class MainLayout(FloatLayout):
         )
     )
 
-    @threaded
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Decorate on_search with threading and handling search info
+        self.on_search = threaded(self._display_search_info(self.on_search))
+
     def on_search(self):
         """Attempt to get song metadata from text and act accordingly.
 
@@ -136,36 +138,47 @@ class MainLayout(FloatLayout):
 
         # Only allow non-empty searches for now
         if not song or not artist:
-            self._display_search_info(1)
-            return
+            return 1
         song, artist = song.strip(), artist.strip()
 
         metadata = self.sp.get_song_metadata(song, artist)
         if metadata is None:
             self._display_search_info(2)
-            return
+            return 2
 
-        self._display_search_info(0)
         self.bpm = round(metadata["tempo"])
         self.metadata = metadata
         print("Song metadata:\n" + str(self.metadata))
-    
-    def _display_search_info(self, err_code):
-        # Succesful search
-        if err_code == 0:
-            self.search_info.text = "Success!"
-            self.search_info.theme_text_color = "Custom"
-            self.search_info.text_color = (0, 0.8, 0.4) # Green
-            return
-        
-        # Errors
-        self.search_info.theme_text_color = "Error"
-        # Empty song name and/or artist name in search input
-        if err_code == 1:
-            self.search_info.text = "Song and artist names cannot be empty."
-        # No search results
-        elif err_code == 2:
-            self.search_info.text = "Couldn't find any results.\nMaybe try modifiyng your search?"
+        return 0
+
+    def _display_search_info(self, func):
+        """Wrap on_search to output search info to user based on results."""
+        functools.wraps(func)
+
+        def wrapper():
+            err_code = func()
+
+            # Succesful search
+            if err_code == 0:
+                self.search_info.text = "Success!"
+                self.search_info.theme_text_color = "Custom"
+                self.search_info.text_color = (0, 0.8, 0.4)  # Green
+                return err_code
+
+            # Errors
+            self.search_info.theme_text_color = "Error"
+            # Empty song name and/or artist name in search input
+            if err_code == 1:
+                self.search_info.text = "Song and artist names cannot be empty."
+            # No search results
+            elif err_code == 2:
+                self.search_info.text = (
+                    "Couldn't find any results.\nMaybe try modifiyng your search?"
+                )
+
+            return err_code
+
+        return wrapper
 
 
 class MetronomeApp(MDApp):

@@ -3,7 +3,7 @@ import configparser
 from spotipy.oauth2 import SpotifyClientCredentials
 from kivy.utils import platform
 from threading import Thread
-from functools import wraps
+import functools
 
 
 class Spotify(spotipy.Spotify):
@@ -169,9 +169,9 @@ class PlaySound:
 
 
 def threaded(func):
-    """A decorator for threading MetronomeApp.on_search"""
+    """Decorate for MetronomeApp.on_search threading."""
 
-    @wraps(func)
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         Thread(target=func, args=args, kwargs=kwargs, daemon=True).start()
 
