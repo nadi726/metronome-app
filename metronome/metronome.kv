@@ -4,7 +4,7 @@
 <MainLayout>:
     song_input: song_input
     artist_input: artist_input
-    
+
     # Search song
     BoxLayout:
         orientation: "horizontal"
@@ -19,8 +19,9 @@
                 id: song_input
                 hint_text: "Song"
                 mode: "rectangle"
-                write_tab: False
                 on_text_validate: root.on_search()
+                write_tab: False
+                focus: True
             MDTextField:
                 id: artist_input
                 hint_text: "Artist"
