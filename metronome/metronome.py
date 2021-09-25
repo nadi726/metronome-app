@@ -1,3 +1,5 @@
+import functools
+
 from kivy.config import Config
 
 Config.set("kivy", "kivy_clock", "free_all")
@@ -9,17 +11,21 @@ from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, NumericProperty, DictProperty
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.properties import ObjectProperty, NumericProperty, DictProperty, StringProperty, BooleanProperty
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.label import MDLabel
 
-import functools
 from metronome.helpers import PlaySound, Spotify, threaded
 
 
 # For having a rough idea of what it would look like on android
 Window.size = (450, 600)
 
+
+class MetadataLabel(MDBoxLayout):
+    field_text = StringProperty("")
+    value_text = StringProperty("")
 
 class PlayButton(MDIconButton):
     """
@@ -97,6 +103,8 @@ class MainLayout(FloatLayout):
         A spotify API client with song search method.
     song_input: ObjectProperty
         The text from the 'song - artist' text field.
+    search_info: ObjectProperty
+        The search feedback to be displayed to the user.
     bpm: NumericProperty
         Beats per minute to be played in the metronome.
     max_bpm: int
@@ -117,10 +125,11 @@ class MainLayout(FloatLayout):
     min_bpm = 20
     metadata = DictProperty(
         dict.fromkeys(
-            ["name", "artists", "tempo", "time_signature", "duration", "mode", "key"],
+            ["name", "artists", "tempo", "time_signature", "duration", "key"],
             "",
         )
     )
+    show_metadata = BooleanProperty(False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -149,6 +158,7 @@ class MainLayout(FloatLayout):
         self.bpm = round(metadata["tempo"])
         self.metadata = metadata
         print("Song metadata:\n" + str(self.metadata))
+        self.show_metadata = True
         return 0
 
     def _display_search_info(self, func):

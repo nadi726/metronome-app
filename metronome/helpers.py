@@ -126,6 +126,8 @@ class Spotify(spotipy.Spotify):
         # Redundant after formatting
         metadata.pop("mode")
 
+        metadata["tempo"] = round(metadata["tempo"])
+
 
 class PlaySound:
     """
