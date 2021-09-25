@@ -12,7 +12,12 @@ from kivy.core.audio import SoundLoader
 from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivy.properties import ObjectProperty, NumericProperty, DictProperty, StringProperty, BooleanProperty
+from kivy.properties import (
+    ObjectProperty,
+    NumericProperty,
+    DictProperty,
+    BooleanProperty,
+)
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.label import MDLabel
 
@@ -22,10 +27,6 @@ from metronome.helpers import PlaySound, Spotify, threaded
 # For having a rough idea of what it would look like on android
 Window.size = (450, 600)
 
-
-class MetadataLabel(MDBoxLayout):
-    field_text = StringProperty("")
-    value_text = StringProperty("")
 
 class PlayButton(MDIconButton):
     """

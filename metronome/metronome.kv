@@ -1,13 +1,5 @@
 #:kivy 2.0.0
 
-<MetadataLabel>:
-    orientation: "horizontal"
-    MDLabel:
-        halign: "center"
-        text: root.field_text
-    MDLabel:
-        halign: "left"
-        text: root.value_text
 
 <MainLayout>:
     song_input: song_input
@@ -127,17 +119,9 @@
         # Song - Artist
         MDLabel:
             halign: "center"
-            text: " - ".join(filter(None, [root.metadata["name"],  ", ".join(root.metadata["artists"])]))
+            text: root.metadata["name"] + " - " + ", ".join(root.metadata["artists"])
         # Rest of the metadata
-        BoxLayout:
-            orientation: "horizontal"
-            spacing: 10
-            MetadataLabel:
-                field_text: "Duration: "
-                value_text: root.metadata["duration"]
-            MetadataLabel:
-                field_text: "Key: "
-                value_text: root.metadata["key"]
-            MetadataLabel:
-                field_text: "Tempo: "
-                value_text: str(root.metadata["tempo"])
+        MDLabel:
+            halign: "center"
+            text: "Duration: {}    Key: {}    Tempo: {}".format(root.metadata['duration'], root.metadata['key'], root.metadata['tempo'])
+        
