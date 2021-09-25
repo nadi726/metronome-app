@@ -4,7 +4,7 @@
 <MainLayout>:
     song_input: song_input
     artist_input: artist_input
-    search_info: search_info
+    search_feedback: search_feedback
 
     # Search song
     BoxLayout:
@@ -31,19 +31,19 @@
         
         MDFillRoundFlatButton:
             text: "Search"
-            size_hint_x: 0.4
             font_size: "18sp"
             on_press: root.on_search()
     
-    # Search info
+    # Search feedback
     MDLabel:
         size_hint: 0.8, 0.2
         pos_hint: {"center_x": 0.5, "center_y": 0.75}
-        id: search_info
+        id: search_feedback
         font_size: 15
         text: "Try searching for a song"
         theme_text_color: "Hint"
 
+    # Metronome
     PlayButton:
         bpm: root.bpm
         user_font_size: "125sp"
@@ -68,6 +68,7 @@
             font_size: 30
             pos_hint: {"center_y": 0.5}
     
+     # Change bpm
     MDBoxLayout:
         orientation: "horizontal"
         size_hint: 0.8, 0.1
@@ -81,6 +82,7 @@
             pos_hint: {"center_y": 0.5}
             color: app.theme_cls.primary_color
             on_press: root.bpm -= 1 if root.bpm != root.min_bpm else 0
+        
         MDSlider:
             size_hint_x: 0.8
             min: root.min_bpm
@@ -124,4 +126,10 @@
         MDLabel:
             halign: "center"
             text: "Duration: {}    Key: {}    Tempo: {}".format(root.metadata['duration'], root.metadata['key'], root.metadata['tempo'])
+    
+    # Spotify icon
+    Image:
+        source: "resources/powered_by_spotify.png"
+        pos_hint: {"x": 0, "center_y": 0.03}
+        size_hint: 0.4, 0.2
         

@@ -104,7 +104,7 @@ class MainLayout(FloatLayout):
         A spotify API client with song search method.
     song_input: ObjectProperty
         The text from the 'song - artist' text field.
-    search_info: ObjectProperty
+    search_feedback: ObjectProperty
         The search feedback to be displayed to the user.
     bpm: NumericProperty
         Beats per minute to be played in the metronome.
@@ -119,7 +119,7 @@ class MainLayout(FloatLayout):
     sp = Spotify()
     song_input = ObjectProperty(None)
     artist_input = ObjectProperty(None)
-    search_info = ObjectProperty(None)
+    search_feedback = ObjectProperty(None)
 
     bpm = NumericProperty(120)
     max_bpm = 240
@@ -153,7 +153,6 @@ class MainLayout(FloatLayout):
 
         metadata = self.sp.get_song_metadata(song, artist)
         if metadata is None:
-            self._display_search_info(2)
             return 2
 
         self.bpm = round(metadata["tempo"])
@@ -171,19 +170,19 @@ class MainLayout(FloatLayout):
 
             # Succesful search
             if err_code == 0:
-                self.search_info.text = "Success!"
-                self.search_info.theme_text_color = "Custom"
-                self.search_info.text_color = (0, 0.8, 0.4)  # Green
+                self.search_feedback.text = "Success!"
+                self.search_feedback.theme_text_color = "Custom"
+                self.search_feedback.text_color = (0, 0.8, 0.4)  # Green
                 return err_code
 
             # Errors
-            self.search_info.theme_text_color = "Error"
+            self.search_feedback.theme_text_color = "Error"
             # Empty song name and/or artist name in search input
             if err_code == 1:
-                self.search_info.text = "Song and artist names cannot be empty."
+                self.search_feedback.text = "Song and artist names cannot be empty."
             # No search results
             elif err_code == 2:
-                self.search_info.text = (
+                self.search_feedback.text = (
                     "Couldn't find any results.\nMaybe try modifiyng your search?"
                 )
 
