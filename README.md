@@ -12,7 +12,9 @@ This app provides an easier way to do it that googling the bpm and opening a met
 
 Naming suggestions are welcome, i honestly have no idea what to call this.
 # Screenshots
-![](screenshots/blank.png) ![](screenshots/success.png)
+
+<img src="screenshots/blank.png" width="400" height="300" />
+<img src="screenshots/success.png" width="400" height="300" />
 
 # Installation
 
