@@ -18,9 +18,6 @@ from kivymd.uix.button import MDIconButton
 from metronome.helpers import PlaySound, Spotify, threaded
 import functools
 
-# For having a rough idea of what it would look like on android
-Window.size = (450, 600)
-
 
 class PlayButton(MDIconButton):
     """
