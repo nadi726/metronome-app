@@ -1,9 +1,10 @@
 import spotipy
 import configparser
+import functools
+from threading import Thread
 from spotipy.oauth2 import SpotifyClientCredentials
 from kivy.utils import platform
-from threading import Thread
-import functools
+
 
 
 class Spotify(spotipy.Spotify):
