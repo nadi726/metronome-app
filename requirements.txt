@@ -1,0 +1,4 @@
+kivy>=2.0.0
+kivmd>=1.0.0
+spotipy>=2.19.0
+pygame==1.9.6
