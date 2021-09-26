@@ -1,28 +1,22 @@
-import functools
-
 from kivy.config import Config
 
 Config.set("kivy", "kivy_clock", "free_all")
 
 from kivymd.app import MDApp
-from kivy.lang import Builder
 from kivy.clock import Clock
-
-from kivy.core.audio import SoundLoader
 from kivy.core.window import Window
-from kivy.uix.floatlayout import FloatLayout
-from kivymd.uix.boxlayout import MDBoxLayout
+
 from kivy.properties import (
     ObjectProperty,
     NumericProperty,
     DictProperty,
     BooleanProperty,
 )
+from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDIconButton
-from kivymd.uix.label import MDLabel
 
 from metronome.helpers import PlaySound, Spotify, threaded
-
+import functools
 
 # For having a rough idea of what it would look like on android
 Window.size = (450, 600)
@@ -37,20 +31,20 @@ class PlayButton(MDIconButton):
     Attributes
     ----------
     icon: str
-        a path to the icon image
+        A path to the icon image.
     sound: PlaySound
-        an interface for playing the beep of the metronome
+        An interface for playing the beep of the metronome.
     clock_event: kivy.event
-        the clock event for timing the beeps according to the bpm (default None)
+        The clock event for timing the beeps according to the bpm (default None).
     is_playing: Bool
-        The current status of the button (play/pause)
+        The current status of the button (play/pause).
 
     Methods
     -------
     on_press
         Play the button if it's paused, and pause if it's playing.
     on_bpm_change
-        Defines behavior for bpm change.
+        Define behavior for bpm change.
     """
 
     bpm = NumericProperty(None)
@@ -106,6 +100,8 @@ class MainLayout(FloatLayout):
         The text from the 'song - artist' text field.
     search_feedback: ObjectProperty
         The search feedback to be displayed to the user.
+    bpm_input: ObjectProperty
+        The input/display box for the bpm.
     bpm: NumericProperty
         Beats per minute to be played in the metronome.
     max_bpm: int
@@ -114,12 +110,15 @@ class MainLayout(FloatLayout):
         Minimum bpm for slider.
     metadata: DictProperty
         The current song's metadata.
+    show_metadata: BooleanProperty
+        hide metadata BoxLayout when there's no metadata.
     """
 
     sp = Spotify()
     song_input = ObjectProperty(None)
     artist_input = ObjectProperty(None)
     search_feedback = ObjectProperty(None)
+    bpm_input = ObjectProperty(None)
 
     bpm = NumericProperty(120)
     max_bpm = 240
@@ -138,15 +137,22 @@ class MainLayout(FloatLayout):
         # Decorate on_search with threading and handling search info
         self.on_search = threaded(self._display_search_info(self.on_search))
 
+        self.bpm_input.bind(text=self.validate_bpm_input)
+
     def on_search(self):
         """Attempt to get song metadata from text and act accordingly.
 
         Is binded to the search button's on_press method.
         Gets metadata based on the text input and returns results accordingly.
+
+        Returns
+        -------
+        int
+            An error code - 0 for success, 1 for invalid search input and 2 for no results.
         """
         song, artist = self.song_input.text, self.artist_input.text
 
-        # Only allow non-empty searches for now
+        # Only allow non-empty searches
         if not song or not artist:
             return 1
         song, artist = song.strip(), artist.strip()
@@ -155,11 +161,17 @@ class MainLayout(FloatLayout):
         if metadata is None:
             return 2
 
-        self.bpm = round(metadata["tempo"])
+        # No errors
+        self.bpm = metadata["tempo"]
         self.metadata = metadata
-        print("Song metadata:\n" + str(self.metadata))
         self.show_metadata = True
         return 0
+
+    def validate_bpm_input(self, instance, value):
+        """Check that the input is within the limits before applying it."""
+        bpm_input = int(self.bpm_input.text)
+        if self.min_bpm <= bpm_input <= self.max_bpm:
+            self.bpm = bpm_input
 
     def _display_search_info(self, func):
         """Wrap on_search to output search info to user based on results."""
@@ -177,10 +189,8 @@ class MainLayout(FloatLayout):
 
             # Errors
             self.search_feedback.theme_text_color = "Error"
-            # Empty song name and/or artist name in search input
             if err_code == 1:
                 self.search_feedback.text = "Song and artist names cannot be empty."
-            # No search results
             elif err_code == 2:
                 self.search_feedback.text = (
                     "Couldn't find any results.\nMaybe try modifiyng your search?"

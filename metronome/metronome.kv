@@ -5,6 +5,7 @@
     song_input: song_input
     artist_input: artist_input
     search_feedback: search_feedback
+    bpm_input: bpm_input
 
     # Search song
     BoxLayout:
@@ -56,7 +57,10 @@
         pos_hint: {"center_x": 0.5, "center_y": 0.35}
         
         TextInput:
+            id: bpm_input
             text: str(root.bpm)
+            on_text_validate: self.text = str(root.bpm)
+            on_focus: self.text = str(root.bpm)
             input_filter: "int"
             multiline: False
             background_color: (0, 0, 0, 0)

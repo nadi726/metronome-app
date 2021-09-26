@@ -41,7 +41,7 @@ class Spotify(spotipy.Spotify):
         """
         song, artists = self._change_to_valid_names(song, artists)
         results = self.search(
-            q=f'track:"{song}" artist:"{artists}"', type="track", limit=10
+            q=f'track:"{song}" artist:"{artists}"', type="track", limit=5
         )["tracks"]["items"]
         if not results:
             return None
@@ -69,12 +69,12 @@ class Spotify(spotipy.Spotify):
 
         Some naming conventions of names in the spotify API are a bit
         different from the names we usually call them.
-        For example, 'The Eagles' are simply referred to by 'eagles',
-        and searching for 'The eagles' provides no results.
+        For example, 'The Eagles' are simply named 'eagles',
+        and searching for 'The Eagles' provides no results.
         This function is responsible for finding those instances and replacing them
         with the names that the spotify API knows.
         Currently only a few songs have been found,
-        so there's no need to create an external file.
+        so there's no need to create an external file to handle this info.
 
         Parameters
         ----------
@@ -162,16 +162,16 @@ class PlaySound:
             from jnius import autoclass
 
             MediaPlayer = autoclass("android.media.MediaPlayer")
-            self.sound = mPlayer_norm = MediaPlayer()
-            mPlayer_norm.setDataSource(soundfile)
-            mPlayer_norm.prepare()
+            self.sound = MediaPlayer()
+            self.sound.setDataSource(soundfile)
+            self.sound.prepare()
 
     def play(self):
         self.sound.play()
 
 
 def threaded(func):
-    """Decorate for MetronomeApp.on_search threading."""
+    """Decoratea function for threading."""
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -180,6 +180,7 @@ def threaded(func):
     return wrapper
 
 
+# For testing and debugging
 if __name__ == "__main__":
     sp = Spotify()
     while True:
