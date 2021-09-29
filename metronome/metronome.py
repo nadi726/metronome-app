@@ -166,7 +166,11 @@ class MainLayout(FloatLayout):
 
     def validate_bpm_input(self, instance, value):
         """Check that the input is within the limits before applying it."""
-        bpm_input = int(self.bpm_input.text)
+
+        bpm_input = self.bpm_input.text
+        if not bpm_input:
+            return
+        bpm_input = int(bpm_input)
         if self.min_bpm <= bpm_input <= self.max_bpm:
             self.bpm = bpm_input
 
