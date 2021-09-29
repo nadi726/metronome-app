@@ -14,7 +14,10 @@ class Spotify(spotipy.Spotify):
 
         # Get spotify client credentials
         config = configparser.ConfigParser()
-        config.read("metronome/config.cfg")
+        self.config_exists = config.read("metronome/config.cfg")
+        if not self.config_exists:
+            return
+
         client_id = config.get("SPOTIFY", "CLIENT_ID")
         client_secret = config.get("SPOTIFY", "CLIENT_SECRET")
 

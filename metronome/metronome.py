@@ -147,12 +147,16 @@ class MainLayout(FloatLayout):
         Returns
         -------
         int
-            An error code - 0 for success, 1 for invalid search input and 2 for no results.
+            An error code - 0 for success, 1 for invalid search input,
+            2 for no results and 3 for no config.cfg file.
         """
+        if not self.sp.config_exists:
+            return 3
+    
         song, artist = self.song_input.text, self.artist_input.text
 
         # Only allow non-empty searches
-        if not song or not artist:
+        if not song:
             return 1
         song, artist = song.strip(), artist.strip()
 
@@ -195,12 +199,15 @@ class MainLayout(FloatLayout):
             # Errors
             self.search_feedback.theme_text_color = "Error"
             if err_code == 1:
-                self.search_feedback.text = "Song and artist names cannot be empty."
+                self.search_feedback.text = "Please specify a song name."
             elif err_code == 2:
                 self.search_feedback.text = (
                     "Couldn't find any results.\nMaybe try modifiyng your search?"
                 )
-
+            elif err_code == 3:
+                self.search_feedback.text = (
+                    "No config.cfg file.\nMake a new file and re-run the program"
+                )
             return err_code
 
         return wrapper
