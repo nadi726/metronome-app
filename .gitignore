@@ -23,3 +23,7 @@ ENV/
 
 # Local History for Visual Studio Code
 .history/
+
+# Buildozer folders
+.buildozer/
+bin/
