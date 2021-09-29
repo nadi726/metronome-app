@@ -24,6 +24,7 @@ ENV/
 # Local History for Visual Studio Code
 .history/
 
-# Buildozer folders
+# Buildozer related
 .buildozer/
 bin/
+main.py

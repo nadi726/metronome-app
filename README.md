@@ -35,7 +35,7 @@ Either execute the command `python -m metronome` from main directory or run `met
 
 # For android
 
-Download and install .apk file.
+Working on it.
 
 # Credits
 
