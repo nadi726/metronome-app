@@ -13,7 +13,7 @@ package.domain = org.test
 source.dir = ./
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,wav
+source.include_exts = py,png,jpg,kv,wav,cfg
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = metronome/*,images/*.png
@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,wav
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = tests, bin
+source.exclude_dirs = tests, bin, screenshots
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.0.0,kivymd==0.104.2,pillow,spotipy==2.19.0,requests,idna,urllib3,pyjnius
+requirements = python3,kivy==2.0.0,kivymd==0.104.2,pillow,spotipy==2.19.0,requests,idna,charset-normalizer,urllib3,pyjnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

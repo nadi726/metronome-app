@@ -28,3 +28,7 @@ ENV/
 .buildozer/
 bin/
 main.py
+log.txt
+
+#venv
+build/

@@ -155,7 +155,7 @@ class PlaySound:
 
             mixer.pre_init(44100, -16, 2, 256)
             mixer.init()
-            self.sound = mixer.Sound("metronome/resources/click.wav")
+            self.sound = mixer.Sound(soundfile)
 
         # On android use pyjnius
         # Solution by Jonathan De: stackoverflow.com/questions/56325453/kivy-play-sound-on-android-without-delay

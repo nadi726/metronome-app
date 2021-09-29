@@ -47,16 +47,18 @@
     # Metronome
     PlayButton:
         bpm: root.bpm
-        user_font_size: "125sp"
+        size_hint: None, None
+        size: "150dp", "150dp"
         pos_hint: {"center_x": 0.5, "center_y": 0.55}
     
     # Display bpm
     MDBoxLayout:
         orientation: "horizontal"
         size_hint: 1, 0.15
-        pos_hint: {"center_x": 0.5, "center_y": 0.35}
+        pos_hint: {"center_x": 0.5, "center_y": 0.33}
         AnchorLayout:
             anchor_x: 'right'
+            anchor_y: 'center'
             TextInput:
                 id: bpm_input
                 text: str(root.bpm)
@@ -67,13 +69,12 @@
                 background_color: (0, 0, 0, 0)
                 size_hint: 0.3, 0.5
                 font_size: '30sp'
-                pos_hint: {"center_y": 0.5}
         AnchorLayout:
             anchor_x: 'center'
+            anchor_y: 'center'
             MDLabel:
                 text: "BPM"
                 font_size: '30sp'
-                pos_hint: {"center_y": 0.5}
     
      # Change bpm
     MDBoxLayout:
@@ -138,5 +139,6 @@
     Image:
         source: "metronome/resources/powered_by_spotify.png"
         pos_hint: {"x": 0.01, "center_y": 0.03}
-        size_hint: 0.4, 0.2
+        size_hint: None, None
+        size: "200dp", "100dp"
         

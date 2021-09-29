@@ -4,7 +4,8 @@ Config.set("kivy", "kivy_clock", "free_all")
 
 from kivymd.app import MDApp
 from kivy.clock import Clock
-from kivy.core.window import Window
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
 
 from kivy.properties import (
     ObjectProperty,
@@ -13,13 +14,13 @@ from kivy.properties import (
     BooleanProperty,
 )
 from kivy.uix.floatlayout import FloatLayout
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.behaviors import CircularRippleBehavior
 
 from metronome.helpers import PlaySound, Spotify, threaded
 import functools
 
 
-class PlayButton(MDIconButton):
+class PlayButton(CircularRippleBehavior, ButtonBehavior, Image):
     """
     A play button for the metronome.
 
@@ -49,7 +50,8 @@ class PlayButton(MDIconButton):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.icon = "metronome/resources/play-button.png"
+        self.ripple_scale = 1
+        self.source = "metronome/resources/play-button.png"
         self.sound = PlaySound("metronome/resources/click.wav")
         self.clock_event = None
         self.is_playing = False
@@ -71,13 +73,13 @@ class PlayButton(MDIconButton):
 
     def _play(self):
         """Handle everything needed for changing the button state to play."""
-        self.icon = "metronome/resources/pause-button.png"
+        self.source = "metronome/resources/pause-button.png"
         self.clock_event = Clock.schedule_interval_free(self._play_sound, 60 / self.bpm)
         self.is_playing = True
 
     def _stop(self):
         """Handle everything needed for changing the button state to pause."""
-        self.icon = "metronome/resources/play-button.png"
+        self.source = "metronome/resources/play-button.png"
         self.clock_event.cancel()
         self.is_playing = False
 
