@@ -49,8 +49,8 @@ class PlayButton(MDIconButton):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.icon = "resources/play-button.png"
-        self.sound = PlaySound("click.wav")
+        self.icon = "metronome/resources/play-button.png"
+        self.sound = PlaySound("metronome/resources/click.wav")
         self.clock_event = None
         self.is_playing = False
         self.bind(bpm=self.on_bpm_change)
@@ -71,13 +71,13 @@ class PlayButton(MDIconButton):
 
     def _play(self):
         """Handle everything needed for changing the button state to play."""
-        self.icon = "resources/pause-button.png"
+        self.icon = "metronome/resources/pause-button.png"
         self.clock_event = Clock.schedule_interval_free(self._play_sound, 60 / self.bpm)
         self.is_playing = True
 
     def _stop(self):
         """Handle everything needed for changing the button state to pause."""
-        self.icon = "resources/play-button.png"
+        self.icon = "metronome/resources/play-button.png"
         self.clock_event.cancel()
         self.is_playing = False
 
@@ -168,8 +168,10 @@ class MainLayout(FloatLayout):
         """Check that the input is within the limits before applying it."""
 
         bpm_input = self.bpm_input.text
+        # Ignore if empty
         if not bpm_input:
             return
+        
         bpm_input = int(bpm_input)
         if self.min_bpm <= bpm_input <= self.max_bpm:
             self.bpm = bpm_input

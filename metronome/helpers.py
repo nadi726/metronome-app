@@ -81,8 +81,8 @@ class Spotify(spotipy.Spotify):
         ----------
         song : str
             The name of the song, as provided by get_song_matadata.
-        artists : str
-            The names of the artists, as provided by get_song_matadata.
+        artist : str
+            The names of the artist, as provided by get_song_matadata.
 
         Returns
         -------
@@ -92,7 +92,7 @@ class Spotify(spotipy.Spotify):
             The artists names provided, modified as needed(if at all).
         """
         song, artist = song.lower().strip(), artist.lower().strip()
-        if song == "i'm yours" and artists == "jason mraz":
+        if song == "i'm yours" and artist == "jason mraz":
             return "im yours", artist
         elif artist == "the eagles":
             return song, "eagles"
@@ -168,11 +168,14 @@ class PlaySound:
             self.sound.prepare()
 
     def play(self):
-        self.sound.play()
+        if platform != "android":
+            self.sound.play()
+        else:
+            self.sound.start()
 
 
 def threaded(func):
-    """Decoratea function for threading."""
+    """Decorate a function for threading."""
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
