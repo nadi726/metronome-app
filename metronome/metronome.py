@@ -16,7 +16,13 @@ from kivy.properties import (
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.behaviors import CircularRippleBehavior
 
-from metronome.helpers import PlaySound, Spotify, threaded, resource_path
+from metronome.helpers import (
+    PlaySound,
+    Spotify,
+    threaded,
+    resource_path,
+    general_resource_path,
+)
 import functools
 
 
@@ -150,7 +156,7 @@ class MainLayout(FloatLayout):
         """
         if not self.sp.config_exists:
             return 3
-    
+
         song, artist = self.song_input.text, self.artist_input.text
 
         # Only allow non-empty searches
@@ -175,7 +181,7 @@ class MainLayout(FloatLayout):
         # Empty input is seen as minimum bpm
         if not bpm_input:
             bpm_input = self.min_bpm
-        
+
         bpm_input = int(bpm_input)
         if self.min_bpm <= bpm_input <= self.max_bpm:
             self.bpm = bpm_input
@@ -183,7 +189,7 @@ class MainLayout(FloatLayout):
             self.bpm = self.min_bpm
         elif bpm_input > self.max_bpm:
             self.bpm = self.max_bpm
-        
+
         self.bpm_input.text = str(self.bpm)
 
     def _display_search_info(self, func):
@@ -222,14 +228,7 @@ class MetronomeApp(MDApp):
         self.icon = resource_path("metronome/resources/icon.png")
         return MainLayout()
 
-def general_resource_path():
-    '''Returns path containing content for using pyinstaller'''
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS)
-    
-    return os.path.join(os.path.abspath("."))
 
 if __name__ == "__main__":
-    import os, sys
-    kivy.resources.resource_add_path(general_resource_path()) # add this line
+    kivy.resources.resource_add_path(general_resource_path())
     MetronomeApp().run()

@@ -4,10 +4,7 @@ import functools
 from threading import Thread
 from spotipy.oauth2 import SpotifyClientCredentials
 from kivy.utils import platform
-
-# Only for pyinstaller
-if platform == 'win':
-    import os, sys
+import os, sys
 
 
 class Spotify(spotipy.Spotify):
@@ -189,8 +186,10 @@ def threaded(func):
 
     return wrapper
 
+
+# Those funtions are neccesary for using pyinstaller
 def resource_path(relative_path):
-    """Get the absolute path to the resource for using pyinstaller"""
+    """Get the absolute path to the resource"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
@@ -198,6 +197,14 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+
+
+def general_resource_path():
+    """Return general path containing content"""
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS)
+
+    return os.path.join(os.path.abspath("."))
 
 
 # For testing and debugging
