@@ -1,6 +1,3 @@
-*.cfg
-.cache
-
 # standard python ignore
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -30,5 +27,10 @@ bin/
 main.py
 log.txt
 
-#venv
+# Venv
 build/
+
+# Other
+*.cfg
+.cache
+*:Zone.Identifier

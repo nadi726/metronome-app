@@ -1,6 +1,5 @@
 #:kivy 2.0.0
 
-
 <MainLayout>:
     song_input: song_input
     artist_input: artist_input
@@ -62,8 +61,8 @@
             TextInput:
                 id: bpm_input
                 text: str(root.bpm)
-                on_text_validate: self.text = str(root.bpm)
-                on_focus: self.text = str(root.bpm)
+                on_text_validate: root.validate_bpm_input()
+                on_focus: root.validate_bpm_input()
                 input_filter: "int"
                 multiline: False
                 background_color: (0, 0, 0, 0)
@@ -98,6 +97,7 @@
             value: root.bpm
             step: 1
             hint: False
+            show_off: False
             pos_hint: {"center_y": 0.5}
             on_value: root.bpm = self.value
         
@@ -141,4 +141,6 @@
         pos_hint: {"x": 0.01, "center_y": 0.03}
         size_hint: None, None
         size: "200dp", "100dp"
+        allow_stretch: True
+        keep_ratio: True
         

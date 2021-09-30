@@ -121,7 +121,7 @@ class MainLayout(FloatLayout):
 
     bpm = NumericProperty(120)
     max_bpm = 240
-    min_bpm = 20
+    min_bpm = 40
     metadata = DictProperty(
         dict.fromkeys(
             ["name", "artists", "tempo", "time_signature", "duration", "key"],
@@ -135,8 +135,6 @@ class MainLayout(FloatLayout):
 
         # Decorate on_search with threading and handling search info
         self.on_search = threaded(self._display_search_info(self.on_search))
-
-        self.bpm_input.bind(text=self.validate_bpm_input)
 
     def on_search(self):
         """Attempt to get song metadata from text and act accordingly.
@@ -170,17 +168,23 @@ class MainLayout(FloatLayout):
         self.show_metadata = True
         return 0
 
-    def validate_bpm_input(self, instance, value):
+    def validate_bpm_input(self):
         """Check that the input is within the limits before applying it."""
 
         bpm_input = self.bpm_input.text
-        # Ignore if empty
+        # Empty input is seen as minimum bpm
         if not bpm_input:
-            return
+            bpm_input = self.min_bpm
         
         bpm_input = int(bpm_input)
         if self.min_bpm <= bpm_input <= self.max_bpm:
             self.bpm = bpm_input
+        elif bpm_input < self.min_bpm:
+            self.bpm = self.min_bpm
+        elif bpm_input > self.max_bpm:
+            self.bpm = self.max_bpm
+        
+        self.bpm_input.text = str(self.bpm)
 
     def _display_search_info(self, func):
         """Wrap on_search to output search info to user based on results."""
