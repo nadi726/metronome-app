@@ -2,12 +2,6 @@
 
 Metronome is a cross-platform kivy and kivymd metronome that lets you search for a song's bpm through the spotify API and immediately play it.
 
-# Motivation
-
-I noticed that sometimes when i hear song, i immediately want find out its bpm and see if i can keep up.
-
-This app provides an easier way to do it that googling the bpm and opening a metronome.
-
 # Name
 
 Naming suggestions are welcome, i honestly have no idea what to call this.
@@ -40,15 +34,15 @@ You have 2 options:
     
     *Optional: make a virtual env for building named build*
 
-    install buildozer and dependencies
+    install buildozer and dependencies.
     
-    move buildozer.spec from android folder to main folder
+    move buildozer.spec from android folder to main folder.
     
-    Run  `buildozer android debug deploy` from terminal
+    Run  `buildozer android debug deploy` from terminal in main project directory.
 
-# How to use?
+# How to use
 
-Run main.py from the main project folder (the one containing this readme)
+Run main.py from the main project folder(the one containing this readme).
 
 # Credits
 
