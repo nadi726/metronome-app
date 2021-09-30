@@ -1,5 +1,6 @@
 #:kivy 2.0.0
 
+#:import resource_path metronome.helpers.resource_path
 <MainLayout>:
     song_input: song_input
     artist_input: artist_input
@@ -137,7 +138,7 @@
     
     # Spotify icon
     Image:
-        source: "metronome/resources/powered_by_spotify.png"
+        source: resource_path("metronome/resources/powered_by_spotify.png")
         pos_hint: {"x": 0.01, "center_y": 0.03}
         size_hint: None, None
         size: "200dp", "100dp"

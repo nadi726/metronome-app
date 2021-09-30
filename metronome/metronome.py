@@ -6,7 +6,7 @@ from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
-
+import kivy.resources
 from kivy.properties import (
     ObjectProperty,
     NumericProperty,
@@ -16,7 +16,7 @@ from kivy.properties import (
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.behaviors import CircularRippleBehavior
 
-from metronome.helpers import PlaySound, Spotify, threaded
+from metronome.helpers import PlaySound, Spotify, threaded, resource_path
 import functools
 
 
@@ -51,8 +51,8 @@ class PlayButton(CircularRippleBehavior, ButtonBehavior, Image):
         super().__init__(**kwargs)
 
         self.ripple_scale = 1
-        self.source = "metronome/resources/play-button.png"
-        self.sound = PlaySound("metronome/resources/click.wav")
+        self.source = resource_path("metronome/resources/play-button.png")
+        self.sound = PlaySound(resource_path("metronome/resources/click.wav"))
         self.clock_event = None
         self.is_playing = False
         self.bind(bpm=self.on_bpm_change)
@@ -73,13 +73,13 @@ class PlayButton(CircularRippleBehavior, ButtonBehavior, Image):
 
     def _play(self):
         """Handle everything needed for changing the button state to play."""
-        self.source = "metronome/resources/pause-button.png"
+        self.source = resource_path("metronome/resources/pause-button.png")
         self.clock_event = Clock.schedule_interval_free(self._play_sound, 60 / self.bpm)
         self.is_playing = True
 
     def _stop(self):
         """Handle everything needed for changing the button state to pause."""
-        self.source = "metronome/resources/play-button.png"
+        self.source = resource_path("metronome/resources/play-button.png")
         self.clock_event.cancel()
         self.is_playing = False
 
@@ -219,8 +219,17 @@ class MainLayout(FloatLayout):
 
 class MetronomeApp(MDApp):
     def build(self):
+        self.icon = resource_path("metronome/resources/icon.png")
         return MainLayout()
 
+def general_resource_path():
+    '''Returns path containing content for using pyinstaller'''
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS)
+    
+    return os.path.join(os.path.abspath("."))
 
 if __name__ == "__main__":
+    import os, sys
+    kivy.resources.resource_add_path(general_resource_path()) # add this line
     MetronomeApp().run()

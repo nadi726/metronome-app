@@ -11,8 +11,16 @@ Naming suggestions are welcome, i honestly have no idea what to call this.
 <img src="screenshots/windows.png" width="350" height="300" />
 <img src="screenshots/android.jpg" width="200" height="360" />
 
-# Setting up
 
+# Setting up
+## Using prebuilt version
+Available for windows and android.
+
+For windows, you can find a standalone .exe file in platform_specific/windows.
+
+For android, you can find an apk in platform_specific/android
+
+## From source
 You need to have spotify client credentials - client id and client secret.
 
 Follow [this guide](https://developer.spotify.com/documentation/general/guides/app-settings/) to get client credentials.
@@ -21,28 +29,23 @@ Edit `config.cfg` with your credentials.
 
 Afterwards, follow platform-specific instructions:
 
-## For pc
+### For computer
 Install required packages: `pip install -r requirements.txt`
 
-## For android
+To use, run main.py from the main project folder.
+### For android
 
 *Note: the metronome feature might not function correctly*
 
-You have 2 options:
-1. Install the apk found in the android folder (might not be the latest version).
-2. Build it yourself using buildozer:
-    
-    *Optional: make a virtual env for building named build*
+*Optional: make a virtual env for building named build*
 
-    install buildozer and dependencies.
-    
-    move buildozer.spec from android folder to main folder.
-    
-    Run  `buildozer android debug deploy` from terminal in main project directory.
+Build it yourself using buildozer(only available for linux):
 
-# How to use
+install buildozer and dependencies.
 
-Run main.py from the main project folder(the one containing this readme).
+move buildozer.spec from android folder to main folder.
+
+Run  `buildozer android debug deploy` from terminal in main project directory.
 
 # Credits
 

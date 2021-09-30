@@ -5,6 +5,9 @@ from threading import Thread
 from spotipy.oauth2 import SpotifyClientCredentials
 from kivy.utils import platform
 
+# Only for pyinstaller
+if platform == 'win':
+    import os, sys
 
 
 class Spotify(spotipy.Spotify):
@@ -14,7 +17,7 @@ class Spotify(spotipy.Spotify):
 
         # Get spotify client credentials
         config = configparser.ConfigParser()
-        self.config_exists = config.read("metronome/config.cfg")
+        self.config_exists = config.read(resource_path("metronome/config.cfg"))
         if not self.config_exists:
             return
 
@@ -185,6 +188,16 @@ def threaded(func):
         Thread(target=func, args=args, kwargs=kwargs, daemon=True).start()
 
     return wrapper
+
+def resource_path(relative_path):
+    """Get the absolute path to the resource for using pyinstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 # For testing and debugging
