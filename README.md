@@ -16,7 +16,7 @@ Naming suggestions are welcome, i honestly have no idea what to call this.
 ## Using prebuilt version
 Available for windows and android.
 
-For windows, you can find a standalone .exe file in platform_specific/windows.
+For windows, you can find a standalone `.exe` file in platform_specific/windows.
 
 For android, you can find an apk in platform_specific/android
 
@@ -30,22 +30,26 @@ Edit `config.cfg` with your credentials.
 Afterwards, follow platform-specific instructions:
 
 ### For computer
-Install required packages: `pip install -r requirements.txt`
+* Simply install required packages: `pip install -r requirements.txt`
 
-To use, run main.py from the main project folder.
+* To use, run main.py from the main project folder.
 ### For android
+
+If you choose this method, you'll have to build it from source using buildozer.
+
+Be warned that this can be very time-consuming, and that **buildzoer is currently not available for windows**.
 
 *Note: the metronome feature might not function correctly*
 
-*Optional: make a virtual env for building named build*
 
-Build it yourself using buildozer(only available for linux):
+#### Instructions:
+* *Optional: make a virtual env for building named build*
 
-install buildozer and dependencies.
+* install buildozer and dependencies.
 
-move buildozer.spec from android folder to main folder.
+* move buildozer.spec from android folder to main folder.
 
-Run  `buildozer android debug deploy` from terminal in main project directory.
+* Run  `buildozer android debug deploy` from terminal in main project directory.
 
 # Credits
 
